@@ -1,0 +1,5 @@
+gradio
+uvicorn
+pydantic
+python-dotenv
+llama-cpp-python
