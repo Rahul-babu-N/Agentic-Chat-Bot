@@ -3,3 +3,7 @@ uvicorn
 pydantic
 python-dotenv
 llama-cpp-python
+langgraph
+langchain_community
+langchain_huggingface
+sentence-transformers
