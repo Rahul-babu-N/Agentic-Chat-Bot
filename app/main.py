@@ -6,7 +6,7 @@ from langchain_core.vectorstores import InMemoryVectorStore
 
 # Global Setup
 EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
-MODEL_PATH = "models/gemma-3-270m-it-F16.gguf"
+MODEL_PATH = "models/Llama-3.2-3B-Instruct-IQ4_XS.gguf"
 THREAD_ID = "2"
 
 # HuggingFace Embeddings
@@ -35,7 +35,7 @@ def respond(history: List[List[str]], user_msg: str):
     return history, ""
 
 with gr.Blocks(title="Local LLM Chatbot") as demo:
-    gr.Markdown("# 🧠 Local LLM Chatbot \nRuns fully local. GPU-accelerated if available.")
+    gr.Markdown("# Local LLM Chatbot \nRuns fully local.")
     chatbot = gr.Chatbot(height=500)
     with gr.Row():
         msg = gr.Textbox(placeholder="Type your message...")

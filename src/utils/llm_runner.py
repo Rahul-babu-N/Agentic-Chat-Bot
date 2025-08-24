@@ -22,7 +22,7 @@ class Llm:
             n_ctx=n_ctx,
             n_gpu_layers=n_gpu_layers,
             n_threads=n_threads,  
-            chat_format="gemma"
+            chat_format="llama-3"
         )
         # self.llm = LlamaCpp(
         #     model_path=model_path,

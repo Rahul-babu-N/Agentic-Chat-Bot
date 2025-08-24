@@ -31,5 +31,6 @@ class ChatBot:
 
         output = app.invoke({"user_prompt": user_prompt},config)
         # self.chat_bot_compiler.save_memory(app=self.app,config=config,vector_store=vector_store)
+        print(output,"\n\n")
         return output["final_result"]
 
