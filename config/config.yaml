@@ -1,0 +1,5 @@
+CHATBOT_DETAILS:
+  EMBEDDING_MODEL: "sentence-transformers/all-mpnet-base-v2"
+  MODEL_PATH: "models/Llama-3.2-3B-Instruct-IQ4_XS.gguf"
+  THREAD_ID: "2"
+  TAVILY_API_KEY: "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"

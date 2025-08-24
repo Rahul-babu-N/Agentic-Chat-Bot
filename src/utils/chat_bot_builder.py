@@ -1,14 +1,14 @@
-from langgraph.graph import START, StateGraph, END
+from langgraph.graph import StateGraph
 from langchain_community.tools import TavilySearchResults
 from typing_extensions import TypedDict
 from langgraph.checkpoint.memory import MemorySaver
 import os
 from typing import List
-from langchain_core.runnables import RunnableConfig
 from langchain_core.documents import Document
 import uuid
 from src.utils.llm_runner import Llm
-os.environ["TAVILY_API_KEY"] = "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"
+from config.config import CONFIG
+os.environ["TAVILY_API_KEY"] = CONFIG["CHATBOT_DETAILS"]["TAVILY_API_KEY"]
 
 
 class ChatBotCompiler:
@@ -36,12 +36,11 @@ class ChatBotCompiler:
             Retrieve relevant conversational memory from vector_store.
             Uses similarity search to recall semantically related past context.
             """
-            threshold=0.6
+            threshold=0.5
             user_prompt = state["user_prompt"]
             query = f"Retrieve past chatbot conversations related to current user prompt: {user_prompt}."
             documents = vector_store.similarity_search_with_score(query, k=1)
             recall_memories =  [document.page_content for document ,score in documents if score > threshold]
-            print("mem\n\n\n\n\n",recall_memories,"\n\n")
             return {
                 "recall_memories": recall_memories
             }
@@ -67,8 +66,6 @@ class ChatBotCompiler:
            
             """
             response = self.llm.generate_response(system_prompt=system_prompt,user_prompt=user_prompt)
-            # print(user_prompt)
-            # print("RESPONSE FOR WEB SEARCH\n\n\n\n\n",response,"\n\n")
             if response.lower() == "yes":
                 
                 return {"is_web_search_required":True}
@@ -114,7 +111,6 @@ class ChatBotCompiler:
             """
             web_search_query = state["web_search_query"]
             web_results = self.web_search_tool.invoke({'query': web_search_query})
-            # print("WEB Results\n\n\n\n",web_results)
             if web_results:
                 return {"web_search_result": web_results[0].get("content")}
             else:
@@ -138,8 +134,9 @@ class ChatBotCompiler:
 
                 When web search results are available, summarize them and integrate with reasoning
                 instead of copying verbatim.
-                When previous conversations are available, use them in generating the response if they are relevant.
-                Generate the response to the user prompt by using the information provided. Do not show them in the output.
+                Use the past memories only if they are relavant or else ignore them.
+                Generate the response to the user prompt by using the necessary information provided. Do not show them in the output.
+                
                     """
             if not state["is_web_search_required"]:
                 user_prompt = state["user_prompt"] 
@@ -151,7 +148,6 @@ class ChatBotCompiler:
                     )
                 else:
                     final_user_prompt = f"user prompt : {user_prompt} "
-                print(final_user_prompt,"\n\n")
                 response = self.llm.generate_response(system_prompt=system_prompt,user_prompt=final_user_prompt)
             else:
                 user_prompt = state["user_prompt"] 
