@@ -8,4 +8,14 @@ __pycache__/
 models/
 *.gguf
 *.bin
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Models & data (large!)
+models/
+*.gguf
+*.bin
 *.safetensors
